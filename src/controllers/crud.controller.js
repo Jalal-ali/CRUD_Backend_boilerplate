@@ -77,5 +77,25 @@ const update = async (req, res) => {
     });
   }
 }
+// delete a item  
+const deleteItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Not a valid id" });
+    }
+    const deletedDoc = await Crud.findByIdAndDelete(id);
+    if (!deletedDoc) {
+      return res.status(404).json({ message: 'Document not found' });
+    }
+    res.status(200).json({ message: "Item deleted successfully !", deletedDoc});
+  }
+  catch {
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message
+    })
+  }
+}
 
-export { create, getData, singleItem, update }
+export { create, getData, singleItem, update, deleteItem}
