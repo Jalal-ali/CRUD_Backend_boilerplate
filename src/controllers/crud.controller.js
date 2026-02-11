@@ -40,19 +40,25 @@ const getData = async (req, res) => {
 
 // get single item
 const singleItem = async (req, res) => {
-  const { id } = req.params
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "Not valid Id" });
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Not a valid ID" });
+    }
+
+    const item = await Crud.findById(id);
+
+    if (!item) {
+      return res.status(404).json({ message: "No item found!" });
+    }
+
+    res.status(200).json({ item });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-  const item = await Crud.findById(id);
-  if (!item) {
-    res.status(404).json({
-      message: "no item found!",
-    });
-    return;
-  }
-  res.status(200).json(item)
-}
+};
 // update a item 
 const update = async (req, res) => {
   try {
