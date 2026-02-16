@@ -74,7 +74,7 @@ const update = async (req, res) => {
     }
 
     const item = await Crud.findByIdAndUpdate(id, { title, description })
-    res.status(200).json({ message: "item updated successfully !" })
+    res.status(200).json({ message: "item updated successfully !", item})
   }
   catch {
     res.status(500).json({
